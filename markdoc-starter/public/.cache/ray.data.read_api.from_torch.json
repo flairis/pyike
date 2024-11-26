@@ -1,0 +1,25 @@
+{
+    "name": "ray.data.read_api.from_torch",
+    "signature": "ray.data.read_api.from_torch(dataset: 'torch.utils.data.Dataset', local_read: bool = False) -> ray.data.dataset.Dataset",
+    "summary": "Create a :class:`~ray.data.Dataset` from a",
+    "desc": "`Torch Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset/>`_.\n\n.. note::\n    The input dataset can either be map-style or iterable-style, and can have arbitrarily large amount of data.\n    The data will be sequentially streamed with one single read task.",
+    "args": [
+        {
+            "name": "dataset",
+            "type": null,
+            "desc": "A `Torch Dataset`_."
+        },
+        {
+            "name": "local_read",
+            "type": null,
+            "desc": "If ``True``, perform the read as a local read."
+        }
+    ],
+    "returns": "A :class:`~ray.data.Dataset` containing the Torch dataset samples.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> import ray\n>>> from torchvision import datasets\n>>> dataset = datasets.MNIST(\"data\", download=True)  # doctest: +SKIP\n>>> ds = ray.data.from_torch(dataset)  # doctest: +SKIP\n>>> ds  # doctest: +SKIP\nMaterializedDataset(num_blocks=..., num_rows=60000, schema={item: object})\n>>> ds.take(1)  # doctest: +SKIP\n{\"item\": (<PIL.Image.Image image mode=L size=28x28 at 0x...>, 5)}"
+        }
+    ]
+}
