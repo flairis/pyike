@@ -1,0 +1,25 @@
+{
+    "name": "ray.data.range",
+    "signature": "ray.data.range(n: int, *, parallelism: int = -1, concurrency: int | None = None, override_num_blocks: int | None = None) → Dataset",
+    "summary": "Creates a :class:`~ray.data.Dataset` from a range of integers [0..n).",
+    "desc": "This function allows for easy creation of synthetic datasets for testing or benchmarking :ref:`Ray Data <data>`.",
+    "args": [
+        {
+            "name": "n",
+            "type": null,
+            "desc": "The upper bound of the range of integers."
+        },
+        {
+            "name": "parallelism",
+            "type": null,
+            "desc": "This argument is deprecated. Use ``override_num_blocks`` argument."
+        }
+    ],
+    "returns": "A :class:`~ray.data.Dataset` producing the integers from the range 0 to n.",
+    "examples": [
+        {
+            "desc": "A basic callout with a title and some content.",
+            "code": ">>> import ray\n>>> ds = ray.data.range(10000)\n>>> ds\nDataset(num_rows=10000, schema={id: int64}]"
+        }
+    ]
+}

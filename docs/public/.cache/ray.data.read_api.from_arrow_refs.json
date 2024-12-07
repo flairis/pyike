@@ -1,0 +1,20 @@
+{
+    "name": "ray.data.read_api.from_arrow_refs",
+    "signature": "ray.data.read_api.from_arrow_refs(tables: Union[ray.types.ObjectRef[Union[ForwardRef('pyarrow.Table'), bytes]], List[ray.types.ObjectRef[Union[ForwardRef('pyarrow.Table'), bytes]]]]) -> ray.data.dataset.MaterializedDataset",
+    "summary": "Create a :class:`~ray.data.Dataset` from a list of Ray object references to",
+    "desc": "PyArrow tables.",
+    "args": [
+        {
+            "name": "tables",
+            "type": null,
+            "desc": "A Ray object reference to Arrow table, or list of Ray object\nreferences to Arrow tables, or its streaming format in bytes."
+        }
+    ],
+    "returns": ":class:`~ray.data.Dataset` holding data read from the tables.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> import pyarrow as pa\n>>> import ray\n>>> table_ref = ray.put(pa.table({\"x\": [1]}))\n>>> ray.data.from_arrow_refs(table_ref)\nMaterializedDataset(num_blocks=1, num_rows=1, schema={x: int64})\n\nCreate a Ray Dataset from a list of PyArrow table references\n\n>>> ray.data.from_arrow_refs([table_ref, table_ref])\nMaterializedDataset(num_blocks=2, num_rows=2, schema={x: int64})"
+        }
+    ]
+}

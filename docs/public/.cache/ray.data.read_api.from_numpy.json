@@ -1,0 +1,20 @@
+{
+    "name": "ray.data.read_api.from_numpy",
+    "signature": "ray.data.read_api.from_numpy(ndarrays: Union[numpy.ndarray, List[numpy.ndarray]]) -> ray.data.dataset.MaterializedDataset",
+    "summary": "Creates a :class:`~ray.data.Dataset` from a list of NumPy ndarrays.",
+    "desc": null,
+    "args": [
+        {
+            "name": "ndarrays",
+            "type": null,
+            "desc": "A NumPy ndarray or a list of NumPy ndarrays."
+        }
+    ],
+    "returns": ":class:`~ray.data.Dataset` holding data from the given ndarrays.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> import numpy as np\n>>> import ray\n>>> arr = np.array([1])\n>>> ray.data.from_numpy(arr)\nMaterializedDataset(num_blocks=1, num_rows=1, schema={data: int64})\n\nCreate a Ray Dataset from a list of NumPy arrays.\n\n>>> ray.data.from_numpy([arr, arr])\nMaterializedDataset(num_blocks=2, num_rows=2, schema={data: int64})"
+        }
+    ]
+}

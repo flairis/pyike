@@ -1,0 +1,30 @@
+{
+    "name": "ray.data.read_api.from_items",
+    "signature": "ray.data.read_api.from_items(items: List[Any], *, parallelism: int = -1, override_num_blocks: Optional[int] = None) -> ray.data.dataset.MaterializedDataset",
+    "summary": "Create a :class:`~ray.data.Dataset` from a list of local Python objects.",
+    "desc": "Use this method to create small datasets from data that fits in memory.",
+    "args": [
+        {
+            "name": "items",
+            "type": null,
+            "desc": "List of local Python objects."
+        },
+        {
+            "name": "parallelism",
+            "type": null,
+            "desc": "This argument is deprecated. Use ``override_num_blocks`` argument."
+        },
+        {
+            "name": "override_num_blocks",
+            "type": null,
+            "desc": "Override the number of output blocks from all read tasks.\nBy default, the number of output blocks is dynamically decided based on\ninput data size and available resources. You shouldn't manually set this\nvalue in most cases."
+        }
+    ],
+    "returns": "A :class:`~ray.data.Dataset` holding the items.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> import ray\n>>> ds = ray.data.from_items([1, 2, 3, 4, 5])\n>>> ds\nMaterializedDataset(num_blocks=..., num_rows=5, schema={item: int64})\n>>> ds.schema()\nColumn  Type\n------  ----\nitem    int64"
+        }
+    ]
+}

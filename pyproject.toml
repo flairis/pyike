@@ -12,7 +12,7 @@ ike = "ike.main:main"
 [tool.poetry.dependencies]
 python = "^3.12"
 typer = "^0.13.1"
-
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.0"

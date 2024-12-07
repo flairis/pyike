@@ -1,0 +1,15 @@
+{
+    "name": "ray.data.read_api.from_modin",
+    "signature": "ray.data.read_api.from_modin(df: 'modin.pandas.dataframe.DataFrame') -> ray.data.dataset.MaterializedDataset",
+    "summary": "Create a :class:`~ray.data.Dataset` from a",
+    "desc": "`Modin DataFrame <https://modin.readthedocs.io/en/stable/flow/modin/pandas/dataframe.html>`_.",
+    "args": [
+        {
+            "name": "df",
+            "type": null,
+            "desc": "A `Modin DataFrame`_, which must be using the Ray backend."
+        }
+    ],
+    "returns": "A :class:`~ray.data.MaterializedDataset` rows read from the DataFrame.",
+    "examples": []
+}
