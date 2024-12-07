@@ -1,9 +1,0 @@
-{
-    "name": "ray.data._internal.progress_bar.set_progress_bars",
-    "signature": "ray.data._internal.progress_bar.set_progress_bars(enabled: bool) -> bool",
-    "summary": "Set whether progress bars are enabled.",
-    "desc": "The default behavior is controlled by the\n``RAY_DATA_DISABLE_PROGRESS_BARS`` environment variable. By default,\nit is set to \"0\". Setting it to \"1\" will disable progress bars, unless\nthey are reenabled by this method.",
-    "args": [],
-    "returns": "Whether progress bars were previously enabled.",
-    "examples": []
-}
