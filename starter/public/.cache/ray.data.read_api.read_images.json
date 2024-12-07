@@ -1,0 +1,95 @@
+{
+    "name": "ray.data.read_api.read_images",
+    "signature": "ray.data.read_api.read_images(paths: Union[str, List[str]], *, filesystem: Optional[ForwardRef('pyarrow.fs.FileSystem')] = None, parallelism: int = -1, meta_provider: Optional[ray.data.datasource.file_meta_provider.BaseFileMetadataProvider] = None, ray_remote_args: Dict[str, Any] = None, arrow_open_file_args: Optional[Dict[str, Any]] = None, partition_filter: Optional[ray.data.datasource.partitioning.PathPartitionFilter] = None, partitioning: ray.data.datasource.partitioning.Partitioning = None, size: Optional[Tuple[int, int]] = None, mode: Optional[str] = None, include_paths: bool = False, ignore_missing_paths: bool = False, shuffle: Optional[Literal['files']] = None, file_extensions: Optional[List[str]] = ['png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp', 'gif'], concurrency: Optional[int] = None, override_num_blocks: Optional[int] = None) -> ray.data.dataset.Dataset",
+    "summary": "Creates a :class:`~ray.data.Dataset` from image files.",
+    "desc": null,
+    "args": [
+        {
+            "name": "paths",
+            "type": null,
+            "desc": "A single file or directory, or a list of file or directory paths.\nA list of paths can contain both files and directories."
+        },
+        {
+            "name": "filesystem",
+            "type": null,
+            "desc": "The pyarrow filesystem\nimplementation to read from. These filesystems are specified in the\n`pyarrow docs <https://arrow.apache.org/docs/python/api/            filesystems.html#filesystem-implementations>`_. Specify this parameter if\nyou need to provide specific configurations to the filesystem. By default,\nthe filesystem is automatically selected based on the scheme of the paths.\nFor example, if the path begins with ``s3://``, the `S3FileSystem` is used."
+        },
+        {
+            "name": "parallelism",
+            "type": null,
+            "desc": "This argument is deprecated. Use ``override_num_blocks`` argument."
+        },
+        {
+            "name": "meta_provider",
+            "type": null,
+            "desc": "A :ref:`file metadata provider <metadata_provider>`. Custom\nmetadata providers may be able to resolve file metadata more quickly and/or\naccurately. In most cases, you do not need to set this. If ``None``, this\nfunction uses a system-chosen implementation."
+        },
+        {
+            "name": "ray_remote_args",
+            "type": null,
+            "desc": "kwargs passed to :meth:`~ray.remote` in the read tasks."
+        },
+        {
+            "name": "arrow_open_file_args",
+            "type": null,
+            "desc": "kwargs passed to\n`pyarrow.fs.FileSystem.open_input_file <https://arrow.apache.org/docs/                python/generated/pyarrow.fs.FileSystem.html                    #pyarrow.fs.FileSystem.open_input_file>`_.\nwhen opening input files to read."
+        },
+        {
+            "name": "partition_filter",
+            "type": null,
+            "desc": " A\n:class:`~ray.data.datasource.partitioning.PathPartitionFilter`. Use\nwith a custom callback to read only selected partitions of a dataset.\nBy default, this filters out any file paths whose file extension does not\nmatch ``*.png``, ``*.jpg``, ``*.jpeg``, ``*.tiff``, ``*.bmp``, or ``*.gif``."
+        },
+        {
+            "name": "partitioning",
+            "type": null,
+            "desc": "A :class:`~ray.data.datasource.partitioning.Partitioning` object\nthat describes how paths are organized. Defaults to ``None``."
+        },
+        {
+            "name": "size",
+            "type": null,
+            "desc": "The desired height and width of loaded images. If unspecified, images\nretain their original shape."
+        },
+        {
+            "name": "mode",
+            "type": null,
+            "desc": "A `Pillow mode <https://pillow.readthedocs.io/en/stable/handbook/concepts            .html#modes>`_\ndescribing the desired type and depth of pixels. If unspecified, image\nmodes are inferred by\n`Pillow <https://pillow.readthedocs.io/en/stable/index.html>`_."
+        },
+        {
+            "name": "include_paths",
+            "type": null,
+            "desc": "If ``True``, include the path to each image. File paths are\nstored in the ``'path'`` column."
+        },
+        {
+            "name": "ignore_missing_paths",
+            "type": null,
+            "desc": "If True, ignores any file/directory paths in ``paths``\nthat are not found. Defaults to False."
+        },
+        {
+            "name": "shuffle",
+            "type": null,
+            "desc": "If setting to \"files\", randomly shuffle input files order before read.\nDefaults to not shuffle with ``None``."
+        },
+        {
+            "name": "file_extensions",
+            "type": null,
+            "desc": "A list of file extensions to filter files by."
+        },
+        {
+            "name": "concurrency",
+            "type": null,
+            "desc": "The maximum number of Ray tasks to run concurrently. Set this\nto control number of tasks to run concurrently. This doesn't change the\ntotal number of tasks run or the total number of output blocks. By default,\nconcurrency is dynamically decided based on the available resources."
+        },
+        {
+            "name": "override_num_blocks",
+            "type": null,
+            "desc": "Override the number of output blocks from all read tasks.\nBy default, the number of output blocks is dynamically decided based on\ninput data size and available resources. You shouldn't manually set this\nvalue in most cases."
+        }
+    ],
+    "returns": "A :class:`~ray.data.Dataset` producing tensors that represent the images at\nthe specified paths. For information on working with tensors, read the\n:ref:`tensor data guide <working_with_tensors>`.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> import ray\n>>> path = \"s3://anonymous@ray-example-data/batoidea/JPEGImages/\"\n>>> ds = ray.data.read_images(path)\n>>> ds.schema()\nColumn  Type\n------  ----\nimage   numpy.ndarray(shape=(32, 32, 3), dtype=uint8)\n\nIf you need image file paths, set ``include_paths=True``.\n\n>>> ds = ray.data.read_images(path, include_paths=True)\n>>> ds.schema()\nColumn  Type\n------  ----\nimage   numpy.ndarray(shape=(32, 32, 3), dtype=uint8)\npath    string\n>>> ds.take(1)[0][\"path\"]\n'ray-example-data/batoidea/JPEGImages/1.jpeg'\n\nIf your images are arranged like:\n\n.. code::\n\n    root/dog/xxx.png\n    root/dog/xxy.png\n\n    root/cat/123.png\n    root/cat/nsdf3.png\n\nThen you can include the labels by specifying a\n:class:`~ray.data.datasource.partitioning.Partitioning`.\n\n>>> import ray\n>>> from ray.data.datasource.partitioning import Partitioning\n>>> root = \"s3://anonymous@ray-example-data/image-datasets/dir-partitioned\"\n>>> partitioning = Partitioning(\"dir\", field_names=[\"class\"], base_dir=root)\n>>> ds = ray.data.read_images(root, size=(224, 224), partitioning=partitioning)\n>>> ds.schema()\nColumn  Type\n------  ----\nimage   numpy.ndarray(shape=(224, 224, 3), dtype=uint8)\nclass   string"
+        }
+    ]
+}

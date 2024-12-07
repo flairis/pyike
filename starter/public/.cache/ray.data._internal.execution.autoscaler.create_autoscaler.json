@@ -1,0 +1,9 @@
+{
+    "name": "ray.data._internal.execution.autoscaler.create_autoscaler",
+    "signature": "ray.data._internal.execution.autoscaler.create_autoscaler(topology, resource_manager, execution_id)",
+    "summary": null,
+    "desc": null,
+    "args": [],
+    "returns": null,
+    "examples": []
+}

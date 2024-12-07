@@ -1,0 +1,90 @@
+{
+    "name": "ray.data.read_api.read_parquet_bulk",
+    "signature": "ray.data.read_api.read_parquet_bulk(paths: Union[str, List[str]], *, filesystem: Optional[ForwardRef('pyarrow.fs.FileSystem')] = None, columns: Optional[List[str]] = None, parallelism: int = -1, ray_remote_args: Dict[str, Any] = None, arrow_open_file_args: Optional[Dict[str, Any]] = None, tensor_column_schema: Optional[Dict[str, Tuple[numpy.dtype, Tuple[int, ...]]]] = None, meta_provider: Optional[ray.data.datasource.file_meta_provider.BaseFileMetadataProvider] = None, partition_filter: Optional[ray.data.datasource.partitioning.PathPartitionFilter] = None, shuffle: Optional[Literal['files']] = None, include_paths: bool = False, file_extensions: Optional[List[str]] = ['parquet'], concurrency: Optional[int] = None, override_num_blocks: Optional[int] = None, **arrow_parquet_args) -> ray.data.dataset.Dataset",
+    "summary": "Create :class:`~ray.data.Dataset` from parquet files without reading metadata.",
+    "desc": "Use :meth:`~ray.data.read_parquet` for most cases.\n\nUse :meth:`~ray.data.read_parquet_bulk` if all the provided paths point to files\nand metadata fetching using :meth:`~ray.data.read_parquet` takes too long or the\nparquet files do not all have a unified schema.\n\nPerformance slowdowns are possible when using this method with parquet files that\nare very large.\n\n.. warning::\n\n    Only provide file paths as input (i.e., no directory paths). An\n    OSError is raised if one or more paths point to directories. If your\n    use-case requires directory paths, use :meth:`~ray.data.read_parquet`\n    instead.",
+    "args": [
+        {
+            "name": "paths",
+            "type": null,
+            "desc": "A single file path or a list of file paths."
+        },
+        {
+            "name": "filesystem",
+            "type": null,
+            "desc": "The PyArrow filesystem\nimplementation to read from. These filesystems are\nspecified in the\n`PyArrow docs <https://arrow.apache.org/docs/python/api/                filesystems.html#filesystem-implementations>`_.\nSpecify this parameter if you need to provide specific configurations to\nthe filesystem. By default, the filesystem is automatically selected based\non the scheme of the paths. For example, if the path begins with ``s3://``,\nthe `S3FileSystem` is used."
+        },
+        {
+            "name": "columns",
+            "type": null,
+            "desc": "A list of column names to read. Only the\nspecified columns are read during the file scan."
+        },
+        {
+            "name": "parallelism",
+            "type": null,
+            "desc": "This argument is deprecated. Use ``override_num_blocks`` argument."
+        },
+        {
+            "name": "ray_remote_args",
+            "type": null,
+            "desc": "kwargs passed to :meth:`~ray.remote` in the read tasks."
+        },
+        {
+            "name": "arrow_open_file_args",
+            "type": null,
+            "desc": "kwargs passed to\n`pyarrow.fs.FileSystem.open_input_file <https://arrow.apache.org/docs/                python/generated/pyarrow.fs.FileSystem.html                    #pyarrow.fs.FileSystem.open_input_file>`_.\nwhen opening input files to read."
+        },
+        {
+            "name": "tensor_column_schema",
+            "type": null,
+            "desc": "A dict of column name to PyArrow dtype and shape\nmappings for converting a Parquet column containing serialized\ntensors (ndarrays) as their elements to PyArrow tensors. This function\nassumes that the tensors are serialized in the raw\nNumPy array format in C-contiguous order (e.g. via\n`arr.tobytes()`)."
+        },
+        {
+            "name": "meta_provider",
+            "type": null,
+            "desc": "A :ref:`file metadata provider <metadata_provider>`. Custom\nmetadata providers may be able to resolve file metadata more quickly and/or\naccurately. In most cases, you do not need to set this. If ``None``, this\nfunction uses a system-chosen implementation."
+        },
+        {
+            "name": "partition_filter",
+            "type": null,
+            "desc": "A\n:class:`~ray.data.datasource.partitioning.PathPartitionFilter`. Use\nwith a custom callback to read only selected partitions of a dataset.\nBy default, this filters out any file paths whose file extension does not\nmatch \"*.parquet*\"."
+        },
+        {
+            "name": "shuffle",
+            "type": null,
+            "desc": "If setting to \"files\", randomly shuffle input files order before read.\nDefaults to not shuffle with ``None``."
+        },
+        {
+            "name": "arrow_parquet_args",
+            "type": null,
+            "desc": "Other parquet read options to pass to PyArrow. For the full\nset of arguments, see\nthe `PyArrow API <https://arrow.apache.org/docs/python/generated/                pyarrow.dataset.Scanner.html#pyarrow.dataset.Scanner.from_fragment>`_"
+        },
+        {
+            "name": "include_paths",
+            "type": null,
+            "desc": "If ``True``, include the path to each file. File paths are\nstored in the ``'path'`` column."
+        },
+        {
+            "name": "file_extensions",
+            "type": null,
+            "desc": "A list of file extensions to filter files by."
+        },
+        {
+            "name": "concurrency",
+            "type": null,
+            "desc": "The maximum number of Ray tasks to run concurrently. Set this\nto control number of tasks to run concurrently. This doesn't change the\ntotal number of tasks run or the total number of output blocks. By default,\nconcurrency is dynamically decided based on the available resources."
+        },
+        {
+            "name": "override_num_blocks",
+            "type": null,
+            "desc": "Override the number of output blocks from all read tasks.\nBy default, the number of output blocks is dynamically decided based on\ninput data size and available resources. You shouldn't manually set this\nvalue in most cases."
+        }
+    ],
+    "returns": ":class:`~ray.data.Dataset` producing records read from the specified paths.",
+    "examples": [
+        {
+            "desc": null,
+            "code": "Read multiple local files. You should always provide only input file paths\n(i.e. no directory paths) when known to minimize read latency.\n\n>>> ray.data.read_parquet_bulk( # doctest: +SKIP\n...     [\"/path/to/file1\", \"/path/to/file2\"])"
+        }
+    ]
+}

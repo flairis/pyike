@@ -1,0 +1,9 @@
+{
+    "name": "ray.data._internal.block_batching.block_batching.batch_blocks",
+    "signature": "ray.data._internal.block_batching.block_batching.batch_blocks(blocks: Iterator[Union[ForwardRef('pyarrow.Table'), ForwardRef('pandas.DataFrame')]], *, stats: Optional[ray.data._internal.stats.DatasetStats] = None, batch_size: Optional[int] = None, batch_format: str = 'default', drop_last: bool = False, collate_fn: Optional[Callable[[Union[ForwardRef('pyarrow.Table'), ForwardRef('pandas.DataFrame'), Dict[str, numpy.ndarray]]], Union[ForwardRef('pyarrow.Table'), ForwardRef('pandas.DataFrame'), Dict[str, numpy.ndarray]]]] = None, shuffle_buffer_min_size: Optional[int] = None, shuffle_seed: Optional[int] = None, ensure_copy: bool = False) -> Iterator[Union[ForwardRef('pyarrow.Table'), ForwardRef('pandas.DataFrame'), Dict[str, numpy.ndarray]]]",
+    "summary": "Create formatted batches of data from 1 or more blocks.",
+    "desc": "This function takes in an iterator of already fetched blocks. Consequently, this\nfunction doesn't support block prefetching.",
+    "args": [],
+    "returns": null,
+    "examples": []
+}
