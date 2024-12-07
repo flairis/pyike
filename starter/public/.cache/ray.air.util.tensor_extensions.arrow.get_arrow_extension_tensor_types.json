@@ -1,9 +1,0 @@
-{
-    "name": "ray.air.util.tensor_extensions.arrow.get_arrow_extension_tensor_types",
-    "signature": "ray.air.util.tensor_extensions.arrow.get_arrow_extension_tensor_types()",
-    "summary": "Returns list of extension types of Arrow Array holding",
-    "desc": "multidimensional tensors\n\n**DeveloperAPI:** This API may change across minor Ray releases.",
-    "args": [],
-    "returns": null,
-    "examples": []
-}
