@@ -1,9 +1,0 @@
-{
-    "name": "ray.data._internal.execution.backpressure_policy.get_backpressure_policies",
-    "signature": "ray.data._internal.execution.backpressure_policy.get_backpressure_policies(topology: 'Topology')",
-    "summary": null,
-    "desc": null,
-    "args": [],
-    "returns": null,
-    "examples": []
-}

@@ -1,9 +1,0 @@
-{
-    "name": "ray.air.util.object_extensions.arrow.object_extension_type_allowed",
-    "signature": "ray.air.util.object_extensions.arrow.object_extension_type_allowed() -> bool",
-    "summary": null,
-    "desc": null,
-    "args": [],
-    "returns": null,
-    "examples": []
-}
