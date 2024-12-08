@@ -13,6 +13,7 @@ ike = "ike.main:main"
 python = "^3.12"
 typer = "^0.13.1"
 requests = "^2.32.3"
+rich = "^13.9.4"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.0"

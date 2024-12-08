@@ -8,11 +8,32 @@ from io import BytesIO
 
 app = typer.Typer()
 
+import logging
+from rich.logging import RichHandler
+
+logger = logging.getLogger(__name__)
+def setup_logging(level: int = logging.INFO) -> None:
+    # Taken from https://github.com/fastapi/fastapi-cli/blob/main/src/fastapi_cli/logging.py#L8
+    rich_handler = RichHandler(
+        show_time=False,
+        rich_tracebacks=True,
+        tracebacks_show_locals=True,
+        markup=True,
+        show_path=False,
+    )
+    rich_handler.setFormatter(logging.Formatter("%(message)s"))
+    logger.addHandler(rich_handler)
+
+    logger.setLevel(level)
+    logger.propagate = False
+
+
+setup_logging()
 
 @app.command()
 def init():
     if not _is_node_installed():
-        print(
+        logger.error(
             "Ike depends on Node.js. Make sure it's installed in the current "
             "environment and available in the PATH."
         )
@@ -23,7 +44,7 @@ def init():
     try:
         importlib.import_module(package_name)
     except ImportError:
-        print(
+        logger.error(
             f"Ike couldn't import a package named '{package_name}'. Make sure it's "
             "installed in the current environment."
         )
@@ -53,17 +74,20 @@ def _install_node_modules(path: str):
 
     try:
         # Run npm install in the project directory
+        logger.info(f"Installing dependencies to '{path}'.")
         subprocess.run(
             ["npm", "install"],
             cwd=path,
             check=True,
             capture_output=True,
         )
-        print(f"Node modules installed successfully in {path}.")
+        logger.info(f"Succesfully installed dependencies.")
     except subprocess.CalledProcessError as e:
-        print(f"Error occurred while installing node modules: {e}")
+        logger.error(f"Error occurred while installing node modules: {e}")
+        typer.Exit(1)
     except FileNotFoundError:
-        print("npm is not installed or not in PATH. Please install Node.js.")
+        logger.error("npm is not installed or not in PATH. Please install Node.js.")
+        typer.Exit(1)
 
 
 def _download_starter_code(path: str):
@@ -105,14 +129,13 @@ def dev():
     path = os.getcwd()
     try:
         # Run `npm run dev` in the project directory
-        print("Starting development server at http://localhost:3000")
+        logger.info("Starting development server at http://localhost:3000")
         result = subprocess.run(
             ["npm", "run", "dev"],
             check=True,
             capture_output=True,
             text=True,
         )
-        print(f"`npm run dev` executed successfully in {path}.")
     except subprocess.CalledProcessError as e:
         if "Could not read package.json" in e.stderr:
             print("The current directory isn't a valid Ike project.")
@@ -120,7 +143,7 @@ def dev():
     except FileNotFoundError:
         print("npm is not installed or not in PATH. Please install Node.js.")
     except KeyboardInterrupt:
-        print("Development server stopped.")
+        logger.info("Development server stopped.")
 
 
 @app.command()
