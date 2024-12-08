@@ -1,21 +1,15 @@
-import inspect
 import json
 import pkgutil
-import re
-import time
 from types import FunctionType, ModuleType
 from typing import List
 
-import ray
-from docstring_parser import parse
-from pydantic import BaseModel
 from tqdm import tqdm
 
 # ike init
 # ike dev
 # ike build
 # ike deploy
-from .models import ClassDefinition, FunctionDefinition, extract_class, extract_func
+from .models import ClassDefinition, FunctionDefinition, extract_func
 
 # start_time = time.time()
 # extract(ray.data.range)
@@ -54,7 +48,6 @@ def extract_definitions(
 
 
 import os
-import types
 
 
 def write_definitions(
