@@ -5,7 +5,7 @@ import os
 import zipfile
 import requests
 from io import BytesIO
-
+from rich.status import Status
 app = typer.Typer()
 
 import logging
@@ -75,13 +75,14 @@ def _install_node_modules(path: str):
     try:
         # Run npm install in the project directory
         logger.info(f"Installing dependencies to '{path}'.")
-        subprocess.run(
-            ["npm", "install"],
-            cwd=path,
-            check=True,
-            capture_output=True,
-        )
-        logger.info(f"Succesfully installed dependencies.")
+        with Status("[bold green]Installing dependencies..."):
+            subprocess.run(
+                ["npm", "install"],
+                cwd=path,
+                check=True,
+                capture_output=True,
+            )
+        logger.info("Succesfully installed dependencies.")
     except subprocess.CalledProcessError as e:
         logger.error(f"Error occurred while installing node modules: {e}")
         typer.Exit(1)
