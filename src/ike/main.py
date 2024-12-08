@@ -57,7 +57,7 @@ def _install_node_modules(path: str):
             ["npm", "install"],
             cwd=path,
             check=True,
-            text=True
+            capture_output=True,
         )
         print(f"Node modules installed successfully in {path}.")
     except subprocess.CalledProcessError as e:
@@ -105,17 +105,22 @@ def dev():
     path = os.getcwd()
     try:
         # Run `npm run dev` in the project directory
-        process = subprocess.run(
+        print("Starting development server at http://localhost:3000")
+        result = subprocess.run(
             ["npm", "run", "dev"],
             check=True,
-            text=True
+            capture_output=True,
+            text=True,
         )
         print(f"`npm run dev` executed successfully in {path}.")
     except subprocess.CalledProcessError as e:
-        print(f"Error occurred while running `npm run dev`: {e}")
+        if "Could not read package.json" in e.stderr:
+            print("The current directory isn't a valid Ike project.")
+            typer.Exit(1)
     except FileNotFoundError:
         print("npm is not installed or not in PATH. Please install Node.js.")
-
+    except KeyboardInterrupt:
+        print("Development server stopped.")
 
 
 @app.command()
