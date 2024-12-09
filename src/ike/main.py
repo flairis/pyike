@@ -128,7 +128,8 @@ def _download_starter_code(path: str):
                         with open(destination_path, "wb") as output_file:
                             output_file.write(zip_ref.read(file_name))
     else:
-        print(f"Failed to download ZIP file. HTTP Status code: {response.status_code}")
+        logger.error(f"Failed to download ZIP file. HTTP Status code: {response.status_code}")
+        raise typer.Exit(1)
 
 
 def _get_node_root(project_root: str) -> str:
@@ -149,7 +150,7 @@ def dev():
     try:
         # Run `npm run dev` in the project directory
         logger.info("Starting development server at http://localhost:3000")
-        result = subprocess.run(
+        subprocess.run(
             ["npm", "run", "dev"],
             check=True,
             capture_output=True,
@@ -158,10 +159,10 @@ def dev():
         )
     except subprocess.CalledProcessError as e:
         if "Could not read package.json" in e.stderr:
-            print("The current directory isn't a valid Ike project.")
             raise typer.Exit(1)
     except FileNotFoundError:
-        print("npm is not installed or not in PATH. Please install Node.js.")
+        logger.error("npm is not installed or not in PATH. Please install Node.js.")
+        raise typer.Exit(1)
     except KeyboardInterrupt:
         logger.info("Development server stopped.")
 
