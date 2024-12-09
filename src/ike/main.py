@@ -72,7 +72,8 @@ def _is_node_installed() -> bool:
         return False
 
 
-def _install_node_modules(path: str):
+def _install_node_modules(project_root: str):
+    path = os.path.join(project_root, ".internals")
     assert os.path.exists(path), f"Path '{path}' doesn't exist."
 
     package_json_path = os.path.join(path, "package.json")
@@ -135,7 +136,8 @@ def _extract_definitions(path: str):
 
 @app.command()
 def dev():
-    path = os.getcwd()
+    project_root = os.getcwd()
+    cwd = os.path.join(project_root, ".internals")
     try:
         # Run `npm run dev` in the project directory
         logger.info("Starting development server at http://localhost:3000")
@@ -144,6 +146,7 @@ def dev():
             check=True,
             capture_output=True,
             text=True,
+            cwd=cwd
         )
     except subprocess.CalledProcessError as e:
         if "Could not read package.json" in e.stderr:
