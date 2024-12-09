@@ -54,8 +54,9 @@ def init():
         )
         raise typer.Exit(1)
 
-    _download_starter_code("docs/")
-    _install_node_modules("docs/")
+    project_root = "docs/"
+    _download_starter_code(project_root)
+    _install_node_modules(project_root)
     # _extract_definitions(...)  # TODO
 
 
@@ -73,19 +74,19 @@ def _is_node_installed() -> bool:
 
 
 def _install_node_modules(project_root: str):
-    path = os.path.join(project_root, ".internals")
-    assert os.path.exists(path), f"Path '{path}' doesn't exist."
+    node_root = os.path.join(project_root, ".internals")
+    assert os.path.exists(node_root), f"Path '{node_root}' doesn't exist."
 
-    package_json_path = os.path.join(path, "package.json")
-    assert os.path.exists(package_json_path), f"No 'package.json' found in '{path}'."
+    package_json_path = os.path.join(node_root, "package.json")
+    assert os.path.exists(package_json_path), f"No 'package.json' found in '{node_root}'."
 
     try:
         # Run npm install in the project directory
-        logger.info(f"Installing dependencies to '{path}'.")
+        logger.info(f"Installing dependencies to '{project_root}'.")
         with Status("[bold green]Installing dependencies..."):
             subprocess.run(
                 ["npm", "install"],
-                cwd=path,
+                cwd=node_root,
                 check=True,
                 capture_output=True,
             )
@@ -137,7 +138,7 @@ def _extract_definitions(path: str):
 @app.command()
 def dev():
     project_root = os.getcwd()
-    cwd = os.path.join(project_root, ".internals")
+    node_root = os.path.join(project_root, ".internals")
     try:
         # Run `npm run dev` in the project directory
         logger.info("Starting development server at http://localhost:3000")
@@ -146,7 +147,7 @@ def dev():
             check=True,
             capture_output=True,
             text=True,
-            cwd=cwd
+            cwd=node_root
         )
     except subprocess.CalledProcessError as e:
         if "Could not read package.json" in e.stderr:
