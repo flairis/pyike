@@ -74,7 +74,7 @@ def _is_node_installed() -> bool:
 
 
 def _install_node_modules(project_root: str):
-    node_root = os.path.join(project_root, ".internals")
+    node_root = _get_node_root(project_root)
     assert os.path.exists(node_root), f"Path '{node_root}' doesn't exist."
 
     package_json_path = os.path.join(node_root, "package.json")
@@ -131,6 +131,9 @@ def _download_starter_code(path: str):
         print(f"Failed to download ZIP file. HTTP Status code: {response.status_code}")
 
 
+def _get_node_root(project_root: str) -> str:
+    return os.path.join(project_root, ".ike")
+
 def _extract_definitions(path: str):
     print("Extracting definitions...")
 
@@ -138,7 +141,11 @@ def _extract_definitions(path: str):
 @app.command()
 def dev():
     project_root = os.getcwd()
-    node_root = os.path.join(project_root, ".internals")
+    if not os.path.exists(os.path.join(project_root, "ike.yaml")):
+        logger.error("The current directory isn't a valid Ike project.")
+        raise typer.Exit(1)
+
+    node_root = _get_node_root(project_root)
     try:
         # Run `npm run dev` in the project directory
         logger.info("Starting development server at http://localhost:3000")
