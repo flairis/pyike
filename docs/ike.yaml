@@ -1,0 +1,10 @@
+sections:
+  - heading: null
+    contents:
+      - getting-started.md
+
+  - heading: Commands
+    contents:
+      - init.md
+      - dev.md
+      - deploy.md
