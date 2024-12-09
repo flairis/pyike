@@ -82,7 +82,6 @@ def _install_node_modules(project_root: str):
 
     try:
         # Run npm install in the project directory
-        logger.info(f"Installing dependencies to '{project_root}'.")
         with Status("[bold green]Installing dependencies..."):
             subprocess.run(
                 ["npm", "install"],
@@ -100,8 +99,9 @@ def _install_node_modules(project_root: str):
 
 
 def _download_starter_code(path: str):
+    logger.info(f"Initializing project directory to '{path}'.")
     repo_owner = "flairis"
-    repo_name = "pyike"
+    repo_name = "ike-docs"
     subdirectory_path = f"{repo_name}-main/starter/"
 
     # URL to download the repository as a ZIP file
