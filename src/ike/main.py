@@ -93,10 +93,10 @@ def _install_node_modules(project_root: str):
         logger.info("Succesfully installed dependencies.")
     except subprocess.CalledProcessError as e:
         logger.error(f"Error occurred while installing node modules: {e}")
-        typer.Exit(1)
+        raise typer.Exit(1)
     except FileNotFoundError:
         logger.error("npm is not installed or not in PATH. Please install Node.js.")
-        typer.Exit(1)
+        raise typer.Exit(1)
 
 
 def _download_starter_code(path: str):
@@ -159,7 +159,7 @@ def dev():
     except subprocess.CalledProcessError as e:
         if "Could not read package.json" in e.stderr:
             print("The current directory isn't a valid Ike project.")
-            typer.Exit(1)
+            raise typer.Exit(1)
     except FileNotFoundError:
         print("npm is not installed or not in PATH. Please install Node.js.")
     except KeyboardInterrupt:
