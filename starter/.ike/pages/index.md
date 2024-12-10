@@ -5,7 +5,7 @@ description: How to get started with Markdoc
 
 # Full Next.js example
 
-{% callout title="spam" %}
+{% callout %}
 This is a full-featured boilerplate for a creating a documentation website using Markdoc and Next.js.
 {% /callout %}
 

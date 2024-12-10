@@ -1,12 +1,5 @@
 ---
-title: ray.data.range
+title: Overview
 ---
 
-<!-- # {% $markdoc.frontmatter.title %} -->
-
-
-{% func href="ray.data.range" /%}
-
----
-
-{% func /%}
+# {% $markdoc.frontmatter.title %}

@@ -6,7 +6,6 @@ import { SideNav, TableOfContents, TopNav } from '../components';
 
 import 'prismjs';
 // Import other Prism themes here
-import 'prismjs/components/prism-python.min';
 import 'prismjs/components/prism-bash.min';
 import 'prismjs/themes/prism.css';
 
@@ -74,7 +73,6 @@ export default function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
       </Head>
       <TopNav>
         <Link href="/docs">Docs</Link>
-        <Link href="/reference">API Reference</Link>
       </TopNav>
       <div className="page">
         <SideNav />
