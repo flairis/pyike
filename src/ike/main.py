@@ -54,7 +54,7 @@ def init():
         )
         raise typer.Exit(1)
 
-    project_root = "docs/"
+    project_root = os.path.join(os.getcwd(), "docs/")
     _download_starter_code(project_root)
     _install_node_modules(project_root)
     _sym_link_config_file(project_root)
@@ -73,12 +73,14 @@ def _watch_for_new_pages(project_root: str):
 def _sym_link_config_file(project_root: str):
     src = os.path.join(project_root, "ike.yaml")
     dst = os.path.join(_get_node_root(project_root), "public", "ike.yaml")
+    print("Symlinking config", src, dst)
     os.symlink(src, dst, target_is_directory=False)
 
 
 def _sym_link_page(project_root: str, relative_path: str):
     src = os.path.join(project_root, relative_path)
     dst = os.path.join(_get_node_root(project_root), "pages", relative_path)
+    print("Symlinking page", src, dst)
     os.symlink(src, dst, target_is_directory=False)
 
 
