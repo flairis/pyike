@@ -57,31 +57,31 @@ def init():
     project_root = os.path.join(os.getcwd(), "docs/")
     _download_starter_code(project_root)
     _install_node_modules(project_root)
-    _sym_link_config_file(project_root)
+    _link_config_file(project_root)
 
     # _extract_definitions(...)  # TODO
 
 
 def _watch_for_new_pages(project_root: str):
-    event_handler = FileSymLinker(project_root)
+    event_handler = FileLinker(project_root)
     observer = Observer()
     observer.daemon = True
     observer.schedule(event_handler, path=project_root, recursive=True)
     observer.start()
 
 
-def _sym_link_config_file(project_root: str):
+def _link_config_file(project_root: str):
     src = os.path.join(project_root, "ike.yaml")
     dst = os.path.join(_get_node_root(project_root), "public", "ike.yaml")
     print("Symlinking config", src, dst)
-    os.symlink(src, dst, target_is_directory=False)
+    os.link(src, dst)
 
 
-def _sym_link_page(project_root: str, relative_path: str):
+def _link_page(project_root: str, relative_path: str):
     src = os.path.join(project_root, relative_path)
     dst = os.path.join(_get_node_root(project_root), "pages", relative_path)
     print("Symlinking page", src, dst)
-    os.symlink(src, dst, target_is_directory=False)
+    os.link(src, dst)
 
 
 
@@ -91,7 +91,7 @@ from watchdog.events import FileSystemEventHandler
 from pathlib import Path
 
 # Define a custom event handler
-class FileSymLinker(FileSystemEventHandler):
+class FileLinker(FileSystemEventHandler):
 
     def __init__(self, project_root: str):
         self._project_root = Path(project_root)
@@ -101,7 +101,7 @@ class FileSymLinker(FileSystemEventHandler):
             relative_path = Path(event.src_path).relative_to(self._project_root)
             if str(relative_path).startswith(".ike") or not str(relative_path).endswith(".md"):
                 return
-            _sym_link_page(self._project_root, relative_path)
+            _link_page(self._project_root, relative_path)
 
 
 def _is_node_installed() -> bool:
