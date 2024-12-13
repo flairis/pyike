@@ -101,9 +101,9 @@ def _link_page(project_root: str, relative_path: str):
 def _link_pages(project_root: str):
     for root, _, files in os.walk(project_root):
         for file in files:
-            if file.startswith(".ike") or not file.endswith(".md"):
-                continue
             relative_path = Path(os.path.join(root, file)).relative_to(project_root)
+            if str(relative_path).startswith(".ike") or not file.endswith(".md"):
+                continue
             _link_page(project_root, str(relative_path))
 
 # Define a custom event handler
