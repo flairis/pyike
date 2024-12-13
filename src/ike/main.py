@@ -76,6 +76,11 @@ def _watch_for_new_pages(project_root: str):
 def _link_config_file(project_root: str):
     src = os.path.join(project_root, "ike.yaml")
     dst = os.path.join(_get_node_root(project_root), "public", "ike.yaml")
+
+    if os.path.exists(dst): 
+        logger.warning(f"Overwriting old copy of config '{dst}'.")
+        os.remove(dst)
+
     logger.debug(f"Linking config file from '{src}' to '{dst}'")
     os.link(src, dst)
 
@@ -83,6 +88,11 @@ def _link_config_file(project_root: str):
 def _link_page(project_root: str, relative_path: str):
     src = os.path.join(project_root, relative_path)
     dst = os.path.join(_get_node_root(project_root), "pages", relative_path)
+
+    if os.path.exists(dst):
+        logger.warning(f"Overwriting old copy of page '{dst}'.")
+        os.remove(dst)
+        
     logger.debug(f"Linking page from '{src}' to '{dst}'")
     os.link(src, dst)
 
@@ -162,6 +172,10 @@ def _download_starter_code(path: str):
                     ]  # Remove subdir prefix
                     if not file_name.endswith("/"):  # Avoid empty names for directories
                         destination_path = os.path.join(path, relative_path)
+                        if os.path.exists(destination_path):
+                            logger.warning(f"File '{destination_path}' already exists.")
+                            continue
+                        
                         # Ensure the destination directory exists
                         os.makedirs(os.path.dirname(destination_path), exist_ok=True)
 
