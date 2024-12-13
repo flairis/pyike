@@ -1,0 +1,12 @@
+sidebar:
+  - heading: null
+    links:
+      - href: "/"
+        title: "Overview"
+  - heading: "Spam started"
+    links:
+      - href: "/spam"
+        title: "Reet"
+      - href: "/docs2"
+        title: "Lasdf"
+

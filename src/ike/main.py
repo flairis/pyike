@@ -1,17 +1,17 @@
-import typer
 import importlib
-import subprocess
+import logging
 import os
+import subprocess
 import zipfile
-import requests
 from io import BytesIO
+
+import requests
+import typer
+from rich.logging import RichHandler
+from rich.prompt import Prompt
 from rich.status import Status
 
 app = typer.Typer()
-
-import logging
-from rich.logging import RichHandler
-
 logger = logging.getLogger(__name__)
 
 

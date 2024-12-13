@@ -1,4 +1,4 @@
-from extract import extract_func, FunctionDefinition
+from extract import FunctionDefinition, extract_func
 
 
 def test_extract_function():
