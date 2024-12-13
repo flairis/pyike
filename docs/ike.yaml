@@ -1,10 +1,15 @@
-sections:
-  - heading: null
-    contents:
-      - getting-started.md
+sidebar:
+  - heading: Overview
+    links:
+      - href: "/getting-started"
+        title: "Getting started"
 
   - heading: Commands
-    contents:
-      - init.md
-      - dev.md
-      - deploy.md
+    links:
+      - href: "/init"
+        title: "init"
+      - href: "/dev"
+        title: "dev"
+      - href: "/deploy"
+        title: "deploy"
+      
