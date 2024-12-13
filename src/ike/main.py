@@ -61,6 +61,7 @@ def init():
     _download_starter_code(project_root)
     _install_node_modules(project_root)
     _link_config_file(project_root)
+    _link_pages(project_root)
 
     # _extract_definitions(...)  # TODO
 
@@ -96,6 +97,14 @@ def _link_page(project_root: str, relative_path: str):
     logger.debug(f"Linking page from '{src}' to '{dst}'")
     os.link(src, dst)
 
+
+def _link_pages(project_root: str):
+    for root, _, files in os.walk(project_root):
+        for file in files:
+            if file.startswith(".ike") or not file.endswith(".md"):
+                continue
+            relative_path = Path(os.path.join(root, file)).relative_to(project_root)
+            _link_page(project_root, str(relative_path))
 
 # Define a custom event handler
 class FileLinker(FileSystemEventHandler):
