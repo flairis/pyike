@@ -4,7 +4,10 @@ import os
 import subprocess
 import zipfile
 from io import BytesIO
-
+import time
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+from pathlib import Path
 import requests
 import typer
 from rich.logging import RichHandler
@@ -73,22 +76,16 @@ def _watch_for_new_pages(project_root: str):
 def _link_config_file(project_root: str):
     src = os.path.join(project_root, "ike.yaml")
     dst = os.path.join(_get_node_root(project_root), "public", "ike.yaml")
-    print("Symlinking config", src, dst)
+    logger.debug(f"Linking config file from '{src}' to '{dst}'")
     os.link(src, dst)
 
 
 def _link_page(project_root: str, relative_path: str):
     src = os.path.join(project_root, relative_path)
     dst = os.path.join(_get_node_root(project_root), "pages", relative_path)
-    print("Symlinking page", src, dst)
+    logger.debug(f"Linking page from '{src}' to '{dst}'")
     os.link(src, dst)
 
-
-
-import time
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-from pathlib import Path
 
 # Define a custom event handler
 class FileLinker(FileSystemEventHandler):
