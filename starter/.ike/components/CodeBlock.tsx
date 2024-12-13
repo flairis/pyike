@@ -2,7 +2,12 @@ import Prism from 'prismjs';
 
 import * as React from 'react';
 
-export function CodeBlock({ children, 'data-language': language }) {
+interface CodeBlockProps {
+  children: React.ReactNode; // Typing children as ReactNode allows any valid React child
+  'data-language': string;  // Assuming language is a string
+}
+
+export function CodeBlock({ children, 'data-language': language }: CodeBlockProps) {
   const ref = React.useRef(null);
 
   React.useEffect(() => {

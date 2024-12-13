@@ -12,18 +12,39 @@ import '../public/globals.css'
 
 import type { AppProps } from 'next/app'
 import type { MarkdocNextJsPageProps } from '@markdoc/next.js'
+import { RenderableTreeNodes, Tag } from '@markdoc/markdoc';
 
 const TITLE = 'Markdoc';
 const DESCRIPTION = 'A powerful, flexible, Markdown-based authoring framework';
 
-function collectHeadings(node, sections = []) {
-  if (node) {
+interface Config {
+  sidebar: Section[];
+}
+
+import { TableOfContentsItem } from '../components/TableOfContents';
+
+interface Link {
+  href: string;
+  title: string;
+}
+
+interface Section {
+  heading: string;
+  links: Link[];
+}
+
+function collectHeadings(node: RenderableTreeNodes, sections: TableOfContentsItem[] = []) {
+  if (Tag.isTag(node)) {
     if (node.name === 'Heading') {
       const title = node.children[0];
 
+      const id = node.attributes.id || "ham" // Assuming you have an ID generator
+      const level = node.attributes.level || 1; // Delsfault to level 1 if not provided
+
       if (typeof title === 'string') {
         sections.push({
-          ...node.attributes,
+          id,
+          level,
           title
         });
       }
@@ -45,13 +66,13 @@ export type MyAppProps = MarkdocNextJsPageProps
 
 export default function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
   const { markdoc } = pageProps;
-  const [config, setConfig] = useState(null);
+  const [config, setConfig] = useState<Config | null>(null);
 
   useEffect(() => {
     const fetchConfig = async () => {
       const res = await fetch('/ike.yaml');
       const text = await res.text();
-      const data = yaml.load(text);
+      const data = yaml.load(text) as Config;
       setConfig(data);
     };
 

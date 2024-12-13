@@ -2,8 +2,22 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
+interface Link {
+  href: string;
+  title: string;
+}
 
-export function SideNav({ items }) {
+interface Section {
+  heading: string;
+  links: Link[];
+}
+
+interface SideNavProps {
+  items: Section[]; // `items` is an array of `Section` objects
+}
+
+
+export function SideNav({ items }: SideNavProps) {
   const router = useRouter();
 
   return (

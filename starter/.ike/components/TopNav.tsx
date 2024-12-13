@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-export function TopNav({ children }) {
+export function TopNav({ children }: { children: React.ReactNode }) {
   return (
     <nav>
       <Link href="/" className="flex">

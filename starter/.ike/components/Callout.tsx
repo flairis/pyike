@@ -1,6 +1,12 @@
 import * as React from 'react';
 
-export function Callout({ title, children }) {
+interface CalloutProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+
+export function Callout({ title, children }: CalloutProps) {
   return (
     <div className="callout">
       <strong>{title}</strong>

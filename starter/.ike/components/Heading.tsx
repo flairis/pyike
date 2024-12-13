@@ -1,6 +1,13 @@
 import * as React from 'react';
 
-export function Heading({ id = '', level = 1, children, className }) {
+interface HeadingProps {
+  id?: string;
+  level?: number;
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Heading({ id = '', level = 1, children, className }: HeadingProps) {
   return React.createElement(
     `h${level}`,
     {
