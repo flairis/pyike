@@ -1,12 +1,5 @@
 sidebar:
-  - heading: null
+  - heading: Overview
     links:
-      - href: "/"
-        title: "Overview"
-  - heading: "Spam started"
-    links:
-      - href: "/spam"
-        title: "Reet"
-      - href: "/docs2"
-        title: "Lasdf"
-
+      - href: "/getting-started"
+        title: "Getting started"
