@@ -1,28 +1,25 @@
 import React from 'react';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-const items = [
-  {
-    title: 'Get started',
-    links: [{href: '/docs', children: 'Overview'}],
-  },
-];
 
-export function SideNav() {
+export function SideNav({ items }) {
   const router = useRouter();
 
   return (
     <nav className="sidenav">
-      {items.map((item) => (
-        <div key={item.title}>
-          <span>{item.title}</span>
+      {items.map((item, itemIndex) => (
+        <div key={`item-${itemIndex}`}>
+          {item.heading && <span>{item.heading}</span>}
           <ul className="flex column">
-            {item.links.map((link) => {
+            {item.links.map((link, linkIndex) => {
               const active = router.pathname === link.href;
               return (
-                <li key={link.href} className={active ? 'active' : ''}>
-                  <Link {...link} />
+                <li
+                  key={`link-${itemIndex}-${linkIndex}`}
+                  className={active ? 'active' : ''}
+                >
+                  <Link href={link.href}>{link.title}</Link>
                 </li>
               );
             })}

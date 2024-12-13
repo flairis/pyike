@@ -39,11 +39,25 @@ function collectHeadings(node, sections = []) {
 
   return sections;
 }
+import { useEffect, useState } from 'react';
+import yaml from 'js-yaml';
 
 export type MyAppProps = MarkdocNextJsPageProps
 
 export default function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
   const { markdoc } = pageProps;
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      const res = await fetch('/ike.yaml');
+      const text = await res.text();
+      const data = yaml.load(text);
+      setConfig(data);
+    };
+
+    fetchConfig();
+  }, []);
 
   let title = TITLE;
   let description = DESCRIPTION;
@@ -60,6 +74,7 @@ export default function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
     ? collectHeadings(pageProps.markdoc.content)
     : [];
 
+
   return (
     <>
       <Head>
@@ -75,7 +90,7 @@ export default function MyApp({ Component, pageProps }: AppProps<MyAppProps>) {
         <Link href="/docs">Docs</Link>
       </TopNav>
       <div className="page">
-        <SideNav />
+        <SideNav items={config?.sidebar || []} />
         <main className="flex column">
           <Component {...pageProps} />
         </main>

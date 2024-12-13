@@ -57,7 +57,49 @@ def init():
     project_root = "docs/"
     _download_starter_code(project_root)
     _install_node_modules(project_root)
+    _sym_link_config_file(project_root)
+
     # _extract_definitions(...)  # TODO
+
+
+def _watch_for_new_pages(project_root: str):
+    event_handler = FileSymLinker(project_root)
+    observer = Observer()
+    observer.daemon = True
+    observer.schedule(event_handler, path=project_root, recursive=True)
+    observer.start()
+
+
+def _sym_link_config_file(project_root: str):
+    src = os.path.join(project_root, "ike.yaml")
+    dst = os.path.join(_get_node_root(project_root), "public", "ike.yaml")
+    os.symlink(src, dst, target_is_directory=False)
+
+
+def _sym_link_page(project_root: str, relative_path: str):
+    src = os.path.join(project_root, relative_path)
+    dst = os.path.join(_get_node_root(project_root), "pages", relative_path)
+    os.symlink(src, dst, target_is_directory=False)
+
+
+
+import time
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+from pathlib import Path
+
+# Define a custom event handler
+class FileSymLinker(FileSystemEventHandler):
+
+    def __init__(self, project_root: str):
+        self._project_root = Path(project_root)
+    
+    def on_created(self, event):
+        if not event.is_directory:
+            relative_path = Path(event.src_path).relative_to(self._project_root)
+            if str(relative_path).startswith(".ike") or not str(relative_path).endswith(".md"):
+                return
+            _sym_link_page(self._project_root, relative_path)
 
 
 def _is_node_installed() -> bool:
@@ -147,6 +189,7 @@ def dev():
         raise typer.Exit(1)
 
     node_root = _get_node_root(project_root)
+    _watch_for_new_pages(project_root)
     try:
         # Run `npm run dev` in the project directory
         logger.info("Starting development server at http://localhost:3000")
