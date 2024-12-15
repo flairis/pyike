@@ -1,0 +1,20 @@
+{
+    "name": "rich.reconfigure",
+    "signature": "rich.reconfigure(*args: Any, **kwargs: Any) -> None",
+    "summary": "Reconfigures the global console by replacing it with another.",
+    "desc": null,
+    "args": [
+        {
+            "name": "*args",
+            "type": "Any",
+            "desc": "Positional arguments for the replacement :class:`~rich.console.Console`."
+        },
+        {
+            "name": "**kwargs",
+            "type": "Any",
+            "desc": "Keyword arguments for the replacement :class:`~rich.console.Console`."
+        }
+    ],
+    "returns": null,
+    "examples": []
+}
