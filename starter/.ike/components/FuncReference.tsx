@@ -22,34 +22,33 @@ export function FuncReference({ name }: FuncReferenceProps) {
             <CodeBlock data-language="python">{func ? func.signature : "Loading"}</CodeBlock>
             <p>{func?.summary ?? "Loading"}</p>
             <p>{func?.desc ?? ""}</p>
-            <h2>Arguments</h2>
             {func?.args && func.args.length > 0 ? (
-                <ul>
-                    {func.args.map((arg, index) => (
-                        <li key={index}>
-                            <b>{arg.name}</b>: {arg.type ?? "any"} - {arg.desc}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No arguments available.</p>
-            )}
+                <>
+                    <h2>Arguments</h2>
+                    <ul>
+                        {func.args.map((arg, index) => (
+                            <li key={index}>
+                                <b>{arg.name}</b>: {arg.type ?? "any"} - {arg.desc}
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            ) : null}
             <h2>Returns</h2>
             <p>{func?.returns ?? "Loading"}</p>
-            <h2>Examples</h2>
             {func?.examples && func.examples.length > 0 ? (
-                <ul>
-                    {func?.examples.map((example) => (
-                        <>
-                            <p>{example.desc}</p >
-                            <CodeBlock data-language="python">{example ? example.code : "Loading"}</CodeBlock>
-                        </>
-                    ))}
-                </ul>
-            ) : (
-                <p>No arguments available.</p>
-            )
-            }
+                <>
+                    <h2>Examples</h2>
+                    <ul>
+                        {func?.examples.map((example) => (
+                            <>
+                                <p>{example.desc}</p >
+                                <CodeBlock data-language="python">{example ? example.code : "Loading"}</CodeBlock>
+                            </>
+                        ))}
+                    </ul>
+                </>
+            ) : null}
         </div >
     );
 }
