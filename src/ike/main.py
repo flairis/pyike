@@ -10,31 +10,12 @@ from watchdog.events import FileSystemEventHandler
 from pathlib import Path
 import requests
 import typer
-from rich.logging import RichHandler
 from rich.prompt import Prompt
 from rich.status import Status
+from ike.extract import extract_definitions, write_definition
 
 app = typer.Typer()
 logger = logging.getLogger(__name__)
-
-
-def setup_logging(level: int = logging.INFO) -> None:
-    # Taken from https://github.com/fastapi/fastapi-cli/blob/main/src/fastapi_cli/logging.py#L8
-    rich_handler = RichHandler(
-        show_time=False,
-        rich_tracebacks=True,
-        tracebacks_show_locals=True,
-        markup=True,
-        show_path=False,
-    )
-    rich_handler.setFormatter(logging.Formatter("%(message)s"))
-    logger.addHandler(rich_handler)
-
-    logger.setLevel(level)
-    logger.propagate = False
-
-
-setup_logging()
 
 
 @app.command()
@@ -209,6 +190,17 @@ def dev():
     if not os.path.exists(os.path.join(project_root, "ike.yaml")):
         logger.error("The current directory isn't a valid Ike project.")
         raise typer.Exit(1)
+
+    try:
+        # TODO: Load package name from ike.yaml
+        package = importlib.import_module("rich")
+    except ImportError:
+        # TODO: Raise helpful error.
+        raise
+
+    node_root = _get_node_root(project_root)
+    for definition in extract_definitions(package):
+        write_definition(definition, os.path.join(node_root, "public", "api"))
 
     node_root = _get_node_root(project_root)
     _watch_for_new_pages(project_root)
