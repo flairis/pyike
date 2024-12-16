@@ -1,6 +1,9 @@
 import importlib
+import json
+import keyring
 import logging
 import os
+import shutil
 import subprocess
 import zipfile
 from io import BytesIO
@@ -234,7 +237,52 @@ def dev():
 
 @app.command()
 def deploy():
-    print("I fight for my friends")
+    api_key = keyring.get_password('ike', 'api_key')
+
+    if not api_key:
+        logger.error("API key not found. Please configure with ike config.")
+        typer.Exit(1)
+
+    project_root = os.path.join(os.getcwd(), "docs/")
+    node_root = _get_node_root(project_root)
+    
+    logger.info("Queueing deployment...")
+    _zip_build(node_root)
+    _submit_deployment(api_key)
+
+    
+def _zip_build(node_root: str):
+    with zipfile.ZipFile("build.zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(node_root):
+            if "node_modules" in root:
+                continue  # Exclude node_modules from zip
+            
+            for file in files:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, os.path.relpath(file_path, node_root))
+
+
+def _submit_deployment(api_key: str) -> str:
+    with open("build.zip", "rb") as file:
+        response = requests.post("https://yron03hrwk.execute-api.us-east-1.amazonaws.com/dev/docs/build", 
+            headers={
+                "x-api-key": f"{api_key}",
+                "Content-Type": "application/zip"
+            }, 
+            data=file
+        )
+
+    if response.status_code == 200:
+        logger.info(f"Deployment queued, will be available at {json.loads(response.text)}")
+    else:
+        logger.info(f"Deployment failed: {response.status_code} {response.text}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def config():
+    api_key = typer.prompt("Enter API key", hide_input=True)
+    keyring.set_password('ike', 'api_key', api_key)
 
 
 def main():
