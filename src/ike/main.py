@@ -44,8 +44,6 @@ def init():
     _link_config_file(project_root)
     _link_pages(project_root)
 
-    # _extract_definitions(...)  # TODO
-
 
 def _watch_for_new_pages(project_root: str):
     event_handler = FileLinker(project_root)
@@ -179,9 +177,6 @@ def _download_starter_code(path: str):
 
 def _get_node_root(project_root: str) -> str:
     return os.path.join(project_root, ".ike")
-
-def _extract_definitions(path: str):
-    print("Extracting definitions...")
 
 
 @app.command()
