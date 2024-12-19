@@ -242,7 +242,6 @@ def deploy():
     node_root = _get_node_root(project_root)
     build_path = os.path.join(node_root, "build.zip")
     
-    logger.info("Queueing deployment...")
     _build_project(node_root, build_path)
     _submit_deployment(api_key, build_path)
 
@@ -252,6 +251,8 @@ def deploy():
 
     
 def _build_project(node_root: str, build_path: str):
+    logger.info("Building project...")
+
     with open(".gitignore", "r") as file:
         ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", file)
 
@@ -266,6 +267,8 @@ def _build_project(node_root: str, build_path: str):
 
 
 def _submit_deployment(api_key: str, build_path: str) -> str:
+    logger.info("Queueing deployment...")
+
     with open(build_path, "rb") as file:
         response = requests.post("https://yron03hrwk.execute-api.us-east-1.amazonaws.com/dev/docs/build", 
             headers={
