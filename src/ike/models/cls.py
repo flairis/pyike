@@ -5,17 +5,17 @@ from pydantic import BaseModel
 
 from .arg import Arg
 from .example import Example
-from .func import FunctionDefinition, extract_func
+from .func import PyFunc, extract_func
 
 
-class ClassDefinition(BaseModel):
+class PyClass(BaseModel):
     name: str
     signature: str
     summary: str | None
     desc: str | None
     args: List[Arg]
     examples: List[Example]
-    methods: List[FunctionDefinition]
+    methods: List[PyFunc]
 
 
 def extract_class(cls: type):

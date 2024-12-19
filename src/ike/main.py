@@ -14,31 +14,12 @@ from watchdog.events import FileSystemEventHandler
 from pathlib import Path
 import requests
 import typer
-from rich.logging import RichHandler
 from rich.prompt import Prompt
 from rich.status import Status
+from ike.extract import extract_definitions, write_definition
 
 app = typer.Typer()
 logger = logging.getLogger(__name__)
-
-
-def setup_logging(level: int = logging.INFO) -> None:
-    # Taken from https://github.com/fastapi/fastapi-cli/blob/main/src/fastapi_cli/logging.py#L8
-    rich_handler = RichHandler(
-        show_time=False,
-        rich_tracebacks=True,
-        tracebacks_show_locals=True,
-        markup=True,
-        show_path=False,
-    )
-    rich_handler.setFormatter(logging.Formatter("%(message)s"))
-    logger.addHandler(rich_handler)
-
-    logger.setLevel(level)
-    logger.propagate = False
-
-
-setup_logging()
 
 
 @app.command()
@@ -66,8 +47,6 @@ def init():
     _install_node_modules(project_root)
     _link_config_file(project_root)
     _link_pages(project_root)
-
-    # _extract_definitions(...)  # TODO
 
 
 def _watch_for_new_pages(project_root: str):
@@ -203,9 +182,6 @@ def _download_starter_code(path: str):
 def _get_node_root(project_root: str) -> str:
     return os.path.join(project_root, ".ike")
 
-def _extract_definitions(path: str):
-    print("Extracting definitions...")
-
 
 def _get_project_root():
     project_root = os.getcwd() 
@@ -220,6 +196,17 @@ def _get_project_root():
 @app.command()
 def dev():
     project_root = _get_project_root()
+
+    try:
+        # TODO: Load package name from ike.yaml
+        package = importlib.import_module("rich")
+    except ImportError:
+        # TODO: Raise helpful error.
+        raise
+
+    node_root = _get_node_root(project_root)
+    for definition in extract_definitions(package):
+        write_definition(definition, os.path.join(node_root, "public", "api"))
 
     node_root = _get_node_root(project_root)
     _watch_for_new_pages(project_root)

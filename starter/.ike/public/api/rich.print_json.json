@@ -1,0 +1,60 @@
+{
+    "name": "rich.print_json",
+    "signature": "rich.print_json(json: Optional[str] = None, *, data: Any = None, indent: Union[NoneType, int, str] = 2, highlight: bool = True, skip_keys: bool = False, ensure_ascii: bool = False, check_circular: bool = True, allow_nan: bool = True, default: Optional[Callable[[Any], Any]] = None, sort_keys: bool = False) -> None",
+    "summary": "Pretty prints JSON. Output will be valid JSON.",
+    "desc": null,
+    "args": [
+        {
+            "name": "json",
+            "type": "str",
+            "desc": "A string containing JSON."
+        },
+        {
+            "name": "data",
+            "type": "Any",
+            "desc": "If json is not supplied, then encode this data."
+        },
+        {
+            "name": "indent",
+            "type": "int",
+            "desc": "Number of spaces to indent. Defaults to 2."
+        },
+        {
+            "name": "highlight",
+            "type": "bool",
+            "desc": "Enable highlighting of output: Defaults to True."
+        },
+        {
+            "name": "skip_keys",
+            "type": "bool",
+            "desc": "Skip keys not of a basic type. Defaults to False."
+        },
+        {
+            "name": "ensure_ascii",
+            "type": "bool",
+            "desc": "Escape all non-ascii characters. Defaults to False."
+        },
+        {
+            "name": "check_circular",
+            "type": "bool",
+            "desc": "Check for circular references. Defaults to True."
+        },
+        {
+            "name": "allow_nan",
+            "type": "bool",
+            "desc": "Allow NaN and Infinity values. Defaults to True."
+        },
+        {
+            "name": "default",
+            "type": "Callable",
+            "desc": "A callable that converts values that can not be encoded\nin to something that can be JSON encoded. Defaults to None."
+        },
+        {
+            "name": "sort_keys",
+            "type": "bool",
+            "desc": "Sort dictionary keys. Defaults to False."
+        }
+    ],
+    "returns": null,
+    "examples": []
+}
