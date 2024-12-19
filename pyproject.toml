@@ -17,6 +17,8 @@ rich = "^13.9.4"
 watchdog = "^6.0.0"
 keyring = "^25.5.0"
 pathspec = "^0.12.1"
+pydantic = "^2.10.3"
+docstring-parser = "^0.16"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.0"

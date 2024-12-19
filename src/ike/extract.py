@@ -1,76 +1,57 @@
+import importlib
 import json
+import logging
+import os
 import pkgutil
 from types import FunctionType, ModuleType
-from typing import List
+from typing import Iterable
 
-from tqdm import tqdm
+from .models import PyClass, PyFunc, extract_func
 
-# ike init
-# ike dev
-# ike build
-# ike deploy
-from .models import ClassDefinition, FunctionDefinition, extract_func
+logger = logging.getLogger(__name__)
 
-# start_time = time.time()
-# extract(ray.data.range)
-# print("--- %s seconds ---" % (time.time() - start_time))
+PyObj = PyClass | PyFunc
 
 
-def extract_definitions(
-    module: ModuleType,
-) -> List[FunctionDefinition | ClassDefinition]:
+def extract_definitions(module: ModuleType) -> Iterable[PyObj]:
     names = getattr(module, "__all__", [])
-
-    for name in tqdm(names):
+    for name in names:
         try:
             obj = getattr(module, name)
         except AttributeError:
-            print("Failed to get", name)
+            logger.warning(f"Failed to get '{name}' from '{module.__name__}'")
             continue
         if isinstance(obj, FunctionType):
-            definition = extract_func(obj)
+            yield extract_func(obj)
 
-    if package.__file__ is None:
-        return []  # When does this happen?
+    for sub_module in _iter_submodules(module):
+        yield from extract_definitions(sub_module)
 
-    # The last part is the `__init__.py` file
-    package_dir = "/".join(package.__file__.split("/")[:-1])
-    for module in pkgutil.iter_modules([package_dir]):
-        if not module.ispkg:
+
+def _iter_submodules(package: ModuleType) -> Iterable[ModuleType]:
+    if not _is_package(package):
+        return
+
+    for module_info in pkgutil.iter_modules(package.__path__):
+        module_name = package.__name__ + "." + module_info.name
+        try:
+            module = importlib.import_module(module_name)
+        except ImportError:
+            logger.warning(f"Couldn't import '{module_name}'")
             continue
 
-        module_name = x.__name__ + "." + module.name
-
-        subpackage = importlib.import_module(module_name)
-        extract_definitions(subpackage)
-
-    return []
+        yield module
 
 
-import os
+def _is_package(module: ModuleType) -> bool:
+    return hasattr(module, "__path__")
 
 
-def write_definitions(
-    definitions: List[FunctionDefinition | ClassDefinition], path: str
-) -> None:
-    assert os.path.isdir(path), path
+def write_definition(definition: PyObj, path: str) -> None:
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
 
-    for definition in definitions:
-        filename = f"{definition.name}.json"
-        with open(os.path.join(path, filename), "w") as f:
-            # f"../markdoc-starter/public/.cache/{definition.name}.json", "w"
-            f.write(json.dumps(definition.model_dump(), indent=4))
-
-
-import importlib
-
-
-def main(package_name: str):
-    try:
-        package = importlib.import_module(package_name)
-    except ImportError:
-        # TODO: Raise helpful error.
-        raise
-
-    definitions = extract_definitions(package)
-    write_definitions(definitions, path=...)
+    filename = f"{definition.name}.json"
+    with open(os.path.join(path, filename), "w") as f:
+        logger.debug(f"Writing '{f.name}'")
+        f.write(json.dumps(definition.model_dump(), indent=4))

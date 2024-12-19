@@ -1,0 +1,30 @@
+{
+    "name": "rich.filesize.decimal",
+    "signature": "rich.filesize.decimal(size: int, *, precision: Optional[int] = 1, separator: Optional[str] = ' ') -> str",
+    "summary": "Convert a filesize in to a string (powers of 1000, SI prefixes).",
+    "desc": "In this convention, ``1000 B = 1 kB``.\n\nThis is typically the format used to advertise the storage\ncapacity of USB flash drives and the like (*256 MB* meaning\nactually a storage capacity of more than *256 000 000 B*),\nor used by **Mac OS X** since v10.6 to report file sizes.",
+    "args": [
+        {
+            "name": "int",
+            "type": "size",
+            "desc": "A file size."
+        },
+        {
+            "name": "int",
+            "type": "precision",
+            "desc": "The number of decimal places to include (default = 1)."
+        },
+        {
+            "name": "str",
+            "type": "separator",
+            "desc": "The string to separate the value from the units (default = \" \")."
+        }
+    ],
+    "returns": "A string containing a abbreviated file size and units.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> filesize.decimal(30000)\n'30.0 kB'\n>>> filesize.decimal(30000, precision=2, separator=\"\")\n'30.00kB'"
+        }
+    ]
+}

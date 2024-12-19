@@ -9,7 +9,7 @@ from .arg import Arg
 from .example import Example
 
 
-class FunctionDefinition(BaseModel):
+class PyFunc(BaseModel):
     name: str
     signature: str
     summary: str | None
@@ -19,7 +19,7 @@ class FunctionDefinition(BaseModel):
     examples: List[Example]
 
 
-def extract_func(func: FunctionType) -> FunctionDefinition:
+def extract_func(func: FunctionType) -> PyFunc:
     assert isinstance(func, FunctionType), func
 
     name = func.__module__ + "." + func.__qualname__
@@ -39,7 +39,7 @@ def extract_func(func: FunctionType) -> FunctionDefinition:
     for example in parsed.examples:
         examples.append(Example(desc=None, code=example.description))
 
-    return FunctionDefinition(
+    return PyFunc(
         name=name,
         signature=signature,
         summary=summary,

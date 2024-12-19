@@ -1,0 +1,35 @@
+{
+    "name": "ray.data.read_api.range",
+    "signature": "ray.data.read_api.range(n: int, *, parallelism: int = -1, concurrency: Optional[int] = None, override_num_blocks: Optional[int] = None) -> ray.data.dataset.Dataset",
+    "summary": "Creates a :class:`~ray.data.Dataset` from a range of integers [0..n).",
+    "desc": "This function allows for easy creation of synthetic datasets for testing or\nbenchmarking :ref:`Ray Data <data>`.",
+    "args": [
+        {
+            "name": "n",
+            "type": null,
+            "desc": "The upper bound of the range of integers."
+        },
+        {
+            "name": "parallelism",
+            "type": null,
+            "desc": "This argument is deprecated. Use ``override_num_blocks`` argument."
+        },
+        {
+            "name": "concurrency",
+            "type": null,
+            "desc": "The maximum number of Ray tasks to run concurrently. Set this\nto control number of tasks to run concurrently. This doesn't change the\ntotal number of tasks run or the total number of output blocks. By default,\nconcurrency is dynamically decided based on the available resources."
+        },
+        {
+            "name": "override_num_blocks",
+            "type": null,
+            "desc": "Override the number of output blocks from all read tasks.\nBy default, the number of output blocks is dynamically decided based on\ninput data size and available resources. You shouldn't manually set this\nvalue in most cases."
+        }
+    ],
+    "returns": "A :class:`~ray.data.Dataset` producing the integers from the range 0 to n.",
+    "examples": [
+        {
+            "desc": null,
+            "code": ">>> import ray\n>>> ds = ray.data.range(10000)\n>>> ds\nDataset(num_rows=10000, schema={id: int64})\n>>> ds.map(lambda row: {\"id\": row[\"id\"] * 2}).take(4)\n[{'id': 0}, {'id': 2}, {'id': 4}, {'id': 6}]"
+        }
+    ]
+}
