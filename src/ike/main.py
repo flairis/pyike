@@ -265,8 +265,8 @@ def deploy():
 
     
 def _build_project(node_root: str, build_path: str):
-    with open(".gitignore", "r") as fh:
-        ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", fh)
+    with open(".gitignore", "r") as file:
+        ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", file)
 
     with zipfile.ZipFile(build_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for root, _, files in os.walk(node_root):  
