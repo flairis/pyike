@@ -3,6 +3,7 @@ import json
 import keyring
 import logging
 import os
+import pathspec
 import shutil
 import subprocess
 import zipfile
@@ -206,12 +207,19 @@ def _extract_definitions(path: str):
     print("Extracting definitions...")
 
 
+def _get_project_root():
+    project_root = os.getcwd() 
+
+    if not os.path.exists(os.path.join(project_root, "ike.yaml")): 
+        logger.error("The current directory isn't a valid Ike project.") 
+        raise typer.Exit(1) 
+
+    return project_root
+
+
 @app.command()
 def dev():
-    project_root = os.getcwd()
-    if not os.path.exists(os.path.join(project_root, "ike.yaml")):
-        logger.error("The current directory isn't a valid Ike project.")
-        raise typer.Exit(1)
+    project_root = _get_project_root()
 
     node_root = _get_node_root(project_root)
     _watch_for_new_pages(project_root)
@@ -240,33 +248,41 @@ def deploy():
     api_key = keyring.get_password('ike', 'api_key')
 
     if not api_key:
-        logger.error("API key not found. Please configure with ike config.")
-        typer.Exit(1)
+        api_key = typer.prompt("Enter API key", hide_input=True)
+        keyring.set_password('ike', 'api_key', api_key)
 
-    project_root = os.path.join(os.getcwd(), "docs/")
+    project_root = _get_project_root()
     node_root = _get_node_root(project_root)
+    build_path = os.path.join(node_root, "build.zip")
     
     logger.info("Queueing deployment...")
-    _zip_build(node_root)
-    _submit_deployment(api_key)
+    _build_project(node_root, build_path)
+    _submit_deployment(api_key, build_path)
+
+    # Clean up build artifact
+    if os.path.exists(build_path):
+        os.remove(build_path)
 
     
-def _zip_build(node_root: str):
-    with zipfile.ZipFile("build.zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, _, files in os.walk(node_root):
-            if "node_modules" in root:
-                continue  # Exclude node_modules from zip
-            
+def _build_project(node_root: str, build_path: str):
+    with open(".gitignore", "r") as fh:
+        ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", fh)
+
+    with zipfile.ZipFile(build_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(node_root):  
             for file in files:
                 file_path = os.path.join(root, file)
-                zipf.write(file_path, os.path.relpath(file_path, node_root))
+                rel_path = os.path.relpath(file_path, node_root)
+                
+                if not ignore_spec.match_file(rel_path):
+                    zipf.write(file_path, rel_path)
 
 
-def _submit_deployment(api_key: str) -> str:
-    with open("build.zip", "rb") as file:
+def _submit_deployment(api_key: str, build_path: str) -> str:
+    with open(build_path, "rb") as file:
         response = requests.post("https://yron03hrwk.execute-api.us-east-1.amazonaws.com/dev/docs/build", 
             headers={
-                "x-api-key": f"{api_key}",
+                "x-api-key": api_key,
                 "Content-Type": "application/zip"
             }, 
             data=file
@@ -274,16 +290,11 @@ def _submit_deployment(api_key: str) -> str:
 
     if response.status_code == 200:
         logger.info(f"Deployment queued, will be available at {json.loads(response.text)}")
+        return json.loads(response.text)
     else:
         logger.info(f"Deployment failed: {response.status_code} {response.text}")
         raise typer.Exit(1)
-
-
-@app.command()
-def config():
-    api_key = typer.prompt("Enter API key", hide_input=True)
-    keyring.set_password('ike', 'api_key', api_key)
-
+    
 
 def main():
     app()
