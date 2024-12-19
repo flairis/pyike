@@ -1,0 +1,5 @@
+sidebar:
+  - heading: Overview
+    links:
+      - href: "/getting-started"
+        title: "Getting started"

@@ -1,9 +1,11 @@
 import logging
+
 from rich.logging import RichHandler
 
 logger = logging.getLogger(__name__)
 
-def setup_logging(level: int = logging.DEBUG) -> None:
+
+def setup_logger(level: int = logging.DEBUG) -> None:
     # Taken from https://github.com/fastapi/fastapi-cli/blob/main/src/fastapi_cli/logging.py#L8
     rich_handler = RichHandler(
         show_time=False,
@@ -19,4 +21,4 @@ def setup_logging(level: int = logging.DEBUG) -> None:
     logger.propagate = False
 
 
-setup_logging()
+setup_logger()
