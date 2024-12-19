@@ -275,9 +275,9 @@ def _submit_deployment(api_key: str, build_path: str) -> str:
             data=file
         )
 
-    if response.status_code == 200:
-        logger.info(f"Deployment queued, will be available at {json.loads(response.text)}")
-        return json.loads(response.text)
+    if response.status_code == 202:
+        url = json.loads(response.text)["body"]
+        logger.info(f"Deployment queued, will be available at {url}")
     else:
         logger.info(f"Deployment failed: {response.status_code} {response.text}")
         raise typer.Exit(1)
